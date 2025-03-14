@@ -1,0 +1,191 @@
+package es.studium.clinica;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+public class MenuPrincipal implements WindowListener, ActionListener
+{
+
+	Frame ventana = new Frame("Menú Principal");
+	
+	MenuBar barraMenu = new MenuBar();
+	Menu mnuClinicas = new Menu("Clinicas");
+	Menu mnuTratamientos = new Menu("Tratamientos");
+	Menu mnuPacientes = new Menu("Pacientes");
+	Menu mnuIngieren = new Menu("Ingieren");
+
+	MenuItem mniConsultaClinicas = new MenuItem("Consulta");
+	MenuItem mniAltaClinicas = new MenuItem("Alta");
+	MenuItem mniBajaClinicas = new MenuItem("Baja");
+	MenuItem mniEditarClinicas = new MenuItem("Edición");
+
+	MenuItem mniConsultaTratamientos = new MenuItem("Consulta");
+	MenuItem mniAltaTratamientos = new MenuItem("Alta");
+	MenuItem mniBajaTratamientos = new MenuItem("Baja");
+	MenuItem mniEditarTratamientos = new MenuItem("Edición");
+
+	MenuItem mniConsultaPacientes = new MenuItem("Consulta");
+	MenuItem mniAltaPacientes = new MenuItem("Alta");
+	MenuItem mniBajaPacientes = new MenuItem("Baja");
+	MenuItem mniEditarPacientes = new MenuItem("Edición");
+
+	MenuItem mniConsultaIngieren = new MenuItem("Consulta");
+	MenuItem mniAltaIngieren = new MenuItem("Alta");
+	MenuItem mniBajaIngieren = new MenuItem("Baja");
+	MenuItem mniEditarIngieren = new MenuItem("Edición");
+
+	int tipo;
+
+	public MenuPrincipal(int t)
+	{
+		tipo = t;
+		ventana.setLayout(new FlowLayout());
+		ventana.addWindowListener(this);
+		ventana.setBackground(Color.pink);
+
+		mniConsultaClinicas.addActionListener(this);
+		mniAltaClinicas.addActionListener(this);
+		mniBajaClinicas.addActionListener(this);
+		mniEditarClinicas.addActionListener(this);
+
+		mnuClinicas.add(mniAltaClinicas);
+		if(tipo==1) 
+		{
+			mnuClinicas.add(mniConsultaClinicas);
+			mnuClinicas.add(mniBajaClinicas);
+			mnuClinicas.add(mniEditarClinicas);
+		}
+
+		mniConsultaTratamientos.addActionListener(this);
+		mniAltaTratamientos.addActionListener(this);
+		mniBajaTratamientos.addActionListener(this);
+		mniEditarTratamientos.addActionListener(this);
+
+		mnuTratamientos.add(mniAltaTratamientos);
+		if(tipo==1)
+		{
+			mnuTratamientos.add(mniConsultaTratamientos);
+			mnuTratamientos.add(mniBajaTratamientos);
+			mnuTratamientos.add(mniEditarTratamientos);
+		}
+		mniConsultaPacientes.addActionListener(this);
+		mniAltaPacientes.addActionListener(this);
+		mniBajaPacientes.addActionListener(this);
+		mniEditarPacientes.addActionListener(this);
+
+		mnuPacientes.add(mniAltaPacientes);
+		if(tipo==1) {
+			mnuPacientes.add(mniConsultaPacientes);
+			mnuPacientes.add(mniBajaPacientes);
+			mnuPacientes.add(mniEditarPacientes);
+		}
+		mniConsultaIngieren.addActionListener(this);
+		mniAltaIngieren.addActionListener(this);
+		mniBajaIngieren.addActionListener(this);
+		mniEditarIngieren.addActionListener(this);
+
+		mnuIngieren.add(mniAltaIngieren);
+		if(tipo==1) {
+			mnuIngieren.add(mniConsultaIngieren);
+			mnuIngieren.add(mniBajaIngieren);
+			mnuIngieren.add(mniEditarIngieren);
+		}
+
+
+		barraMenu.add(mnuClinicas);
+		barraMenu.add(mnuTratamientos);
+		barraMenu.add(mnuPacientes);
+		barraMenu.add(mnuIngieren);
+
+		ventana.setMenuBar(barraMenu);
+		ventana.setSize(350,200);
+		ventana.setVisible(true);
+	}
+	public void windowActivated(WindowEvent windowEvent){}
+	public void windowClosed(WindowEvent windowEvent) {}
+	public void windowClosing(WindowEvent windowEvent)
+	{
+		System.exit(0);
+	}
+	public void windowDeactivated(WindowEvent windowEvent) {}
+	public void windowDeiconified(WindowEvent windowEvent) {}
+	public void windowIconified(WindowEvent windowEvent) {}
+	public void windowOpened(WindowEvent windowEvent) {}
+	public void actionPerformed(ActionEvent actionEvent)
+	{
+		if(actionEvent.getSource().equals(mniAltaClinicas))
+		{
+		new AltaClinicas();
+		}
+		else if(actionEvent.getSource().equals(mniConsultaClinicas))
+		{
+		new ConsultaClinicas();
+		}
+		else if(actionEvent.getSource().equals(mniBajaClinicas))
+		{
+		new BajaClinicas();
+		}
+		else if(actionEvent.getSource().equals(mniEditarClinicas))
+		{
+		new EdicionClinicas();
+		}
+		
+		else if(actionEvent.getSource().equals(mniAltaTratamientos))
+		{
+		new AltaTratamientos();
+		}
+		else if(actionEvent.getSource().equals(mniConsultaTratamientos))
+		{
+		new ConsultaTratamientos();
+		}
+		else if(actionEvent.getSource().equals(mniBajaTratamientos))
+		{
+		new BajaTratamientos();
+		}
+		else if(actionEvent.getSource().equals(mniEditarTratamientos))
+		{
+		new EdicionTratamientos();
+		}
+		
+		else if(actionEvent.getSource().equals(mniAltaPacientes))
+		{
+		new AltaPacientes();
+		}
+		else if(actionEvent.getSource().equals(mniConsultaPacientes))
+		{
+		new ConsultaPacientes();
+		}
+		else if(actionEvent.getSource().equals(mniBajaPacientes))
+		{
+		new BajaPacientes();
+		}
+		else if(actionEvent.getSource().equals(mniEditarPacientes))
+		{
+		new EdicionPacientes();
+		}
+		
+		else if(actionEvent.getSource().equals(mniAltaIngieren))
+		{
+		new AltaIngieren();
+		}
+		else if(actionEvent.getSource().equals(mniConsultaIngieren))
+		{
+		new ConsultaIngieren();
+		}
+		else if(actionEvent.getSource().equals(mniBajaIngieren))
+		{
+		new BajaIngieren();
+		}
+		else if(actionEvent.getSource().equals(mniEditarIngieren))
+		{
+		new EdicionIngieren();
+		}
+	}
+}
