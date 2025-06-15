@@ -32,7 +32,8 @@ public class EdicionClinicas implements WindowListener, ActionListener
 	ResultSet resultset = null;
 	String idClinica = null;
 
-	public EdicionClinicas() 
+	String usuario;
+	public EdicionClinicas(String usuario) 
 	{
 		
 		ventana.setLayout(new FlowLayout());
@@ -109,7 +110,7 @@ public class EdicionClinicas implements WindowListener, ActionListener
 				
 			}
 			
-			System.exit(0);
+			ventana.dispose();
 		}
 	}
 
@@ -121,8 +122,7 @@ public class EdicionClinicas implements WindowListener, ActionListener
 			
 			idClinica = choClinica.getSelectedItem().split(" - ")[0];
 			connection = modelo.conectar();
-			modelo.editarCamposClinica(connection, idClinica, txtDireccionClinica, txtTelefonoClinica, txtHorarioClinica);
-			sentencia = "SELECT * FROM clinicas WHERE idClinica = " + idClinica;
+			modelo.editarCamposClinica(connection, sentencia , idClinica, txtDireccionClinica, txtTelefonoClinica, txtHorarioClinica);
 			modelo.desconectar(connection);
 			ventanaEdicion.setVisible(true);
 		
@@ -130,18 +130,30 @@ public class EdicionClinicas implements WindowListener, ActionListener
 		
 		else if (actionEvent.getSource().equals(btnModificar)) 
 		{
-			
-			connection = modelo.conectar();
-			modelo.modificarClinica("UPDATE clinicas SET direccionClinica = '"
-					+ txtDireccionClinica.getText() + "', telefonoClinica = '"
-					+ txtTelefonoClinica.getText() + "', horarioClinica = '"
-					+ txtHorarioClinica.getText() + "' WHERE idClinica = "
-					+ idClinica + ";");
-			modelo.desconectar(connection);
-			feedback.setVisible(true);
-			rellenarChoice();
-			ventanaEdicion.setVisible(false);
-			
+		    if(!txtDireccionClinica.getText().isBlank() && !txtTelefonoClinica.getText().isBlank() && !txtHorarioClinica.getText().isBlank())
+		    {
+		        connection = modelo.conectar();
+		        boolean exito = modelo.modificarClinica(connection, usuario,"UPDATE clinicas SET direccionClinica = '"
+		            + txtDireccionClinica.getText() + "', telefonoClinica = '"
+		            + txtTelefonoClinica.getText() + "', horarioClinica = '"
+		            + txtHorarioClinica.getText() + "' WHERE idClinica = "
+		            + idClinica + ";");
+		        modelo.desconectar(connection);
+
+		        if (exito) {
+		            mensaje.setText("Modificación correcta");
+		            rellenarChoice();
+		            ventanaEdicion.setVisible(false);
+		        } else {
+		            mensaje.setText("Error al modificar la clínica");
+		        }
+		        feedback.setVisible(true);
+		    }
+		    else 
+		    {
+		        mensaje.setText("No puede haber ningún campo en blanco");
+		        feedback.setVisible(true);
+		    }
 		}
 	}
 

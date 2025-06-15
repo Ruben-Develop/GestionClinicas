@@ -38,8 +38,10 @@ public class BajaClinicas implements WindowListener, ActionListener
 	Statement statement = null;
 	ResultSet rs = null;
 
+	String usuario;
 	
-	public BajaClinicas() {
+	public BajaClinicas(String u) {
+		usuario = u;
 		ventana.setLayout(new FlowLayout());
 		ventana.setSize(250, 200);
 		ventana.setResizable(false);
@@ -106,7 +108,7 @@ public class BajaClinicas implements WindowListener, ActionListener
 			Connection connection = modelo.conectar();
 			String idClinica = ch.getSelectedItem().split(" - ")[0];
 			
-			if(!modelo.bajaClinica(connection, idClinica)) 
+			if(!modelo.bajaClinica(connection, usuario, idClinica)) 
 			{
 				
 				msj.setText("Baja incorrecta");
@@ -150,7 +152,7 @@ public class BajaClinicas implements WindowListener, ActionListener
 		else 
 		{
 			
-			System.exit(0);
+			ventana.dispose();
 			
 		}
 	}

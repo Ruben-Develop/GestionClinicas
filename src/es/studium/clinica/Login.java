@@ -34,7 +34,7 @@ public class Login implements WindowListener, ActionListener
 		ventana.setLayout(new FlowLayout());
 		ventana.setSize(220,200);
 		ventana.setResizable(false);
-		ventana.setBackground(Color.pink);
+		ventana.setBackground(Color.PINK);
 		
 		ventana.add(lblUsuario);
 		ventana.add(txtUsuario);
@@ -63,6 +63,7 @@ public class Login implements WindowListener, ActionListener
 	{
 		
 		new Login();
+		
 		
 	}
 
@@ -128,7 +129,8 @@ public class Login implements WindowListener, ActionListener
 			{
 				
 				ventana.setVisible(false);
-				new MenuPrincipal(tipo);
+				Modelo.guardarLog(txtUsuario.getText(), "Accede al sistema");
+				new MenuPrincipal(tipo, txtUsuario.getText());
 				
 			}
 		}

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="&Iacute;ndice">
+		<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Contenido">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Introducci&oacute;n">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\introduccion.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Cl&iacute;nicas">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\clinicas.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Pacientes">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\pacientes.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Tratamientos">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\tratamientos.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Ingesta">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\ingieren.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Preguntas">
+			<param name="Local" value="..\..\1ºDAM\Lenguaje Marcas\Gestion\faq.html">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY></HTML>

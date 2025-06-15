@@ -1,5 +1,6 @@
 package es.studium.clinica;
 
+import java.awt.Button;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,8 +17,10 @@ public class ConsultaTratamientos implements WindowListener, ActionListener
 	TextArea txtArea = new TextArea();
 	Modelo modelo = new Modelo();
 	Connection connection = null;
-
-	public ConsultaTratamientos()
+	
+	Button btnGenerarPDF = new Button("Generar PDF");
+	String usuario;
+	public ConsultaTratamientos(String usuario)
 	{
 		
 		ventana.setLayout(new GridBagLayout());
@@ -47,24 +50,30 @@ public class ConsultaTratamientos implements WindowListener, ActionListener
 
 		ventana.add(txtArea, constraints);
 		
+		ventana.add(btnGenerarPDF);
+        btnGenerarPDF.addActionListener(this);
+		
 		// Restauramos al valor por defecto, para no afectar a los
 		// siguientes componentes.
 		constraints.weighty = 0.0;
 
 		ventana.setLocationRelativeTo(null);
 		ventana.addWindowListener(this);
-		ventana.setSize(550,250);
+		ventana.setSize(600,250);
 		ventana.setVisible(true);
 		
 	}
 
-	public static void main(String[] args)
-	{
-		new ConsultaTratamientos();
-	}
-
+	public static final String DEST = "consultaTratamientos.pdf";
 	@Override
-	public void actionPerformed(ActionEvent e){}
+	public void actionPerformed(ActionEvent e){
+		if (e.getSource().equals(btnGenerarPDF)) 
+        {
+            Modelo modelo = new Modelo();
+            modelo.ImprimirPacientes(DEST, txtArea.getText(), usuario);
+
+        }
+	}
 
 	@Override
 	public void windowOpened(WindowEvent e){}

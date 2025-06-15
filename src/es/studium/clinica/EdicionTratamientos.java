@@ -33,7 +33,8 @@ public class EdicionTratamientos implements WindowListener, ActionListener
 	ResultSet resultset = null;
 	String idTratamiento = null;
 
-	public EdicionTratamientos() 
+	String usuario;
+	public EdicionTratamientos(String usuario) 
 	{
 		
 		ventana.setLayout(new FlowLayout());
@@ -67,7 +68,7 @@ public class EdicionTratamientos implements WindowListener, ActionListener
 		ventanaEdicion.setLocationRelativeTo(null);
 		
 		feedback.setLayout(new FlowLayout());
-		feedback.setSize(200, 100);
+		feedback.setSize(300, 100);
 		feedback.setResizable(false);
 		feedback.add(mensaje);
 		feedback.addWindowListener(this);
@@ -112,7 +113,7 @@ public class EdicionTratamientos implements WindowListener, ActionListener
 				
 			}
 			
-			System.exit(0);
+			ventana.dispose();
 		}
 	}
 
@@ -124,7 +125,7 @@ public class EdicionTratamientos implements WindowListener, ActionListener
 			
 			idTratamiento = choTratamiento.getSelectedItem().split(" - ")[0];
 			connection = modelo.conectar();
-			modelo.editarCamposTratamiento(connection, idTratamiento, txtFechaCaducidad, txtTipo, txtPrecio);
+			modelo.editarCamposTratamiento(connection, usuario, idTratamiento, txtFechaCaducidad, txtTipo, txtPrecio);
 			sentencia = "SELECT * FROM tratamientos WHERE idTratamiento = " + idTratamiento;
 			modelo.desconectar(connection);
 			ventanaEdicion.setVisible(true);
@@ -133,24 +134,38 @@ public class EdicionTratamientos implements WindowListener, ActionListener
 		
 		else if (actionEvent.getSource().equals(btnModificar)) 
 		{
-			
-			connection = modelo.conectar();
-			modelo.modificarTratamiento("UPDATE tratamientos SET FechaCaducidadTratamiento = '"
-					+ txtFechaCaducidad.getText() + "', tipoTratamiento = '"
-					+ txtTipo.getText() + "', precioTratamiento = '"
-					+ txtPrecio.getText() + "' WHERE idTratamiento = "
-					+ idTratamiento + ";");
-			modelo.desconectar(connection);
-			feedback.setVisible(true);
-			rellenarChoice();
-			ventanaEdicion.setVisible(false);
-			
+		    // Validar campos vacíos
+		    if (txtFechaCaducidad.getText().trim().isEmpty() ||
+		        txtTipo.getText().trim().isEmpty() ||
+		        txtPrecio.getText().trim().isEmpty()) 
+		    {
+		        mensaje.setText("No puede haber campos vacíos");
+		        feedback.setVisible(true);
+		        return;  // Salimos sin modificar nada
+		    }
+		    
+		    connection = modelo.conectar();
+		    boolean modificado = modelo.modificarTratamiento(connection, usuario, "UPDATE tratamientos SET fechaCaducidadTratamiento = '"
+		        + txtFechaCaducidad.getText() + "', tipoTratamiento = '"
+		        + txtTipo.getText() + "', precioTratamiento = '"
+		        + txtPrecio.getText() + "' WHERE idTratamiento = "
+		        + idTratamiento + ";");
+		    modelo.desconectar(connection);
+		    
+		    if (modificado) {
+		        mensaje.setText("Modificación correcta");
+		    } else {
+		        mensaje.setText("Modificación incorrecta");
+		    }
+		    feedback.setVisible(true);
+		    rellenarChoice();
+		    ventanaEdicion.setVisible(false);
 		}
 	}
 
 	public void rellenarChoice() {
 		connection = modelo.conectar();
-		modelo.rellenarChoiceTratamiento(connection, choTratamiento);
+		modelo.rellenarChoiceTratamiento(connection, sentencia, choTratamiento);
 		modelo.desconectar(connection);
 	}
 

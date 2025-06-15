@@ -12,5 +12,20 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="Drivers/barcodes-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/commons-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/font-asian-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/forms-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/hyph-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/io-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/kernel-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/layout-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/pdfa-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/pdftest-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/sign-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="Drivers/slf4j-nop-1.7.25.jar"/>
+	<classpathentry kind="lib" path="Drivers/styled-xml-parser-7.2.1.jar"/>
+	<classpathentry kind="lib" path="Drivers/svg-7.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

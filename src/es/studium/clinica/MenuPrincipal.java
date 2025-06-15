@@ -20,6 +20,7 @@ public class MenuPrincipal implements WindowListener, ActionListener
 	Menu mnuTratamientos = new Menu("Tratamientos");
 	Menu mnuPacientes = new Menu("Pacientes");
 	Menu mnuIngieren = new Menu("Ingieren");
+	Menu mnuAyuda = new Menu("Ayuda");
 
 	MenuItem mniConsultaClinicas = new MenuItem("Consulta");
 	MenuItem mniAltaClinicas = new MenuItem("Alta");
@@ -40,12 +41,16 @@ public class MenuPrincipal implements WindowListener, ActionListener
 	MenuItem mniAltaIngieren = new MenuItem("Alta");
 	MenuItem mniBajaIngieren = new MenuItem("Baja");
 	MenuItem mniEditarIngieren = new MenuItem("Edición");
+	
+	MenuItem mniAyuda = new MenuItem("Ayuda");
 
 	int tipo;
+	String usuario;
 
-	public MenuPrincipal(int t)
+	public MenuPrincipal(int t, String u)
 	{
 		tipo = t;
+		usuario = u;
 		ventana.setLayout(new FlowLayout());
 		ventana.addWindowListener(this);
 		ventana.setBackground(Color.pink);
@@ -97,12 +102,15 @@ public class MenuPrincipal implements WindowListener, ActionListener
 			mnuIngieren.add(mniBajaIngieren);
 			mnuIngieren.add(mniEditarIngieren);
 		}
+		mniAyuda.addActionListener(this);
+		mnuAyuda.add(mniAyuda);
 
-
+	
 		barraMenu.add(mnuClinicas);
 		barraMenu.add(mnuTratamientos);
 		barraMenu.add(mnuPacientes);
 		barraMenu.add(mnuIngieren);
+		barraMenu.add(mnuAyuda);
 
 		ventana.setMenuBar(barraMenu);
 		ventana.setSize(350,200);
@@ -122,70 +130,74 @@ public class MenuPrincipal implements WindowListener, ActionListener
 	{
 		if(actionEvent.getSource().equals(mniAltaClinicas))
 		{
-		new AltaClinicas();
+		new AltaClinicas(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniConsultaClinicas))
 		{
-		new ConsultaClinicas();
+		new ConsultaClinicas(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniBajaClinicas))
 		{
-		new BajaClinicas();
+		new BajaClinicas(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniEditarClinicas))
 		{
-		new EdicionClinicas();
+		new EdicionClinicas(usuario);
 		}
 		
 		else if(actionEvent.getSource().equals(mniAltaTratamientos))
 		{
-		new AltaTratamientos();
+		new AltaTratamientos(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniConsultaTratamientos))
 		{
-		new ConsultaTratamientos();
+		new ConsultaTratamientos(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniBajaTratamientos))
 		{
-		new BajaTratamientos();
+		new BajaTratamientos(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniEditarTratamientos))
 		{
-		new EdicionTratamientos();
+		new EdicionTratamientos(usuario);
 		}
 		
 		else if(actionEvent.getSource().equals(mniAltaPacientes))
 		{
-		new AltaPacientes();
+		new AltaPacientes(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniConsultaPacientes))
 		{
-		new ConsultaPacientes();
+		new ConsultaPacientes(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniBajaPacientes))
 		{
-		new BajaPacientes();
+		new BajaPacientes(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniEditarPacientes))
 		{
-		new EdicionPacientes();
+		new EdicionPacientes(usuario);
 		}
 		
 		else if(actionEvent.getSource().equals(mniAltaIngieren))
 		{
-		new AltaIngieren();
+		new AltaIngieren(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniConsultaIngieren))
 		{
-		new ConsultaIngieren();
+		new ConsultaIngieren(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniBajaIngieren))
 		{
-		new BajaIngieren();
+		new BajaIngieren(usuario);
 		}
 		else if(actionEvent.getSource().equals(mniEditarIngieren))
 		{
-		new EdicionIngieren();
+		new EdicionIngieren(usuario);
+		}
+		else if(actionEvent.getSource().equals(mniAyuda))
+		{
+		Modelo.ayuda();
 		}
 	}
 }

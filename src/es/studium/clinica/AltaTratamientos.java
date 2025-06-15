@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -34,11 +35,14 @@ public class AltaTratamientos implements WindowListener, ActionListener
 	
 	Dialog feedback = new Dialog(ventana, "Mensaje", true);
 	Label mensaje = new Label("");
+	
+	String usuario;
 
-	public AltaTratamientos()
+	public AltaTratamientos(String u)
 	{
-		ventana.setLayout(new FlowLayout());
-		ventana.setSize(370,150);
+		usuario = u;
+		ventana.setLayout(new GridLayout(5,2,5,5));
+		ventana.setSize(300,150);
 		ventana.setResizable(false);
 		ventana.setLocationRelativeTo(null);
 		ventana.setBackground(Color.PINK);
@@ -59,7 +63,7 @@ public class AltaTratamientos implements WindowListener, ActionListener
 		feedback.setLayout(new FlowLayout());
 		feedback.setSize(280,100);
 		feedback.setResizable(false);
-		feedback.setBackground(Color.pink);
+		feedback.setBackground(Color.GRAY);
 		feedback.add(mensaje);
 		feedback.addWindowListener(this);
 		
@@ -77,7 +81,7 @@ public class AltaTratamientos implements WindowListener, ActionListener
 		}
 		else
 		{
-			System.exit(0);
+			ventana.dispose();
 		}
 	}
 	public void windowDeactivated(WindowEvent windowEvent) {}
@@ -89,25 +93,38 @@ public class AltaTratamientos implements WindowListener, ActionListener
 	{
 		if(actionEvent.getSource().equals(btnLimpiar))
 		{
-			txtClinica.setText("");
 			txtFechaDeCaducidad.setText("");
 			txtTipoTratamiento.setText("");
 			txtPrecioTratamiento.setText("");
 			txtClinica.requestFocus();
 		}
+		
 		else if(actionEvent.getSource().equals(btnAceptar))
 		{
+			if(txtFechaDeCaducidad.getText().isBlank() || txtTipoTratamiento.getText().isBlank() || txtPrecioTratamiento.getText().isBlank()) 
+			{
+				mensaje.setText("Debe rellenar todos los campos");
+				feedback.setVisible(true);
+				return;
+			}
+			
 			// Conectarse a la BD
 			Modelo modelo = new Modelo();
 			Connection connection = modelo.conectar();
+			
 			// Hacer el Alta
-			if(!modelo.altaTratamiento(connection, txtFechaDeCaducidad.getText(), txtTipoTratamiento.getText(), txtPrecioTratamiento.getText())) 
+			if(!modelo.altaTratamiento(connection, usuario, txtFechaDeCaducidad.getText(), txtTipoTratamiento.getText(), txtPrecioTratamiento.getText())) 
 			{
 				mensaje.setText("Error en Alta");
 			}
 			else
 			{
 				mensaje.setText("Alta Correcta");
+				
+				txtFechaDeCaducidad.setText("");
+				txtTipoTratamiento.setText("");
+				txtPrecioTratamiento.setText("");
+				txtClinica.requestFocus();
 			}
 			feedback.setVisible(true);
 			// Desconectar

@@ -38,8 +38,9 @@ public class BajaTratamientos implements WindowListener, ActionListener
 	Statement statement = null;
 	ResultSet rs = null;
 
+	String usuario;
 	
-	public BajaTratamientos() {
+	public BajaTratamientos(String usuario) {
 		ventana.setLayout(new FlowLayout());
 		ventana.setSize(240, 200);
 		ventana.setResizable(false);
@@ -48,7 +49,7 @@ public class BajaTratamientos implements WindowListener, ActionListener
 		Modelo modelo = new Modelo();
 		Connection connection = modelo.conectar();
 		
-		modelo.rellenarChoiceTratamiento(connection, ch);
+		modelo.rellenarChoiceTratamiento(connection, usuario, ch);
 		modelo.desconectar(connection);
 		
 		ventana.add(ch);
@@ -101,27 +102,22 @@ public class BajaTratamientos implements WindowListener, ActionListener
 		
 		else if(actionEvent.getSource().equals(btnSi)) 
 		{
-			
-			Modelo modelo = new Modelo();
-			Connection connection = modelo.conectar();
-			String idTratamiento = ch.getSelectedItem().split(" - ")[0];
-			
-			if(!modelo.bajaTratamiento(connection, idTratamiento)) 
-			{
-				
-				msj.setText("Baja incorrecta");
-				
-			}
-			
-			else 
-			{
-				
-				msj.setText("Baja correcta");
-				
-			}
-			
-			feedback.setVisible(true);
-			modelo.desconectar(connection);
+		    Modelo modelo = new Modelo();
+		    Connection connection = modelo.conectar();
+		    String idTratamiento = ch.getSelectedItem().split(" - ")[0];
+		    
+		    // Llamar al método y mostrar resultado
+		    if(!modelo.bajaTratamiento(connection, usuario, idTratamiento)) 
+		    {
+		        msj.setText("Baja incorrecta");
+		    }
+		    else 
+		    {
+		        msj.setText("Baja correcta");
+		    }
+		    
+		    feedback.setVisible(true);
+		    modelo.desconectar(connection);
 		}
 	}
 
@@ -150,7 +146,7 @@ public class BajaTratamientos implements WindowListener, ActionListener
 		else 
 		{
 			
-			System.exit(0);
+			ventana.dispose();
 			
 		}
 	}
