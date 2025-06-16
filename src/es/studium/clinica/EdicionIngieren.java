@@ -4,39 +4,39 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-public class EdicionIngieren implements WindowListener, ActionListener 
+public class EdicionIngieren implements WindowListener, ActionListener
 {
     Frame ventana = new Frame("Edición Ingieren");
 
     Choice choRegistro = new Choice();
     Button btnEditar = new Button("Editar registro");
+
     Frame ventanaEdicion = new Frame("Editando...");
 
     Label lblPaciente = new Label("Paciente:");
     Label lblTratamiento = new Label("Tratamiento:");
+    Label lblCantidad = new Label("Cantidad:");
 
     Choice chPaciente = new Choice();
     Choice chTratamiento = new Choice();
-
-    Label lblCantidad = new Label("Cantidad:");
-
     TextField txtCantidad = new TextField(10);
 
     Button btnModificar = new Button("Modificar registro");
 
     Dialog feedback = new Dialog(ventana, "Feedback", true);
     Label mensaje = new Label("Modificación Correcta");
+
     String sentencia = "";
 
     Modelo modelo = new Modelo();
     Connection connection = null;
     Statement statement = null;
     ResultSet resultset = null;
-    String idIngieren = null;
 
+    String idIngieren = null;
     String usuario;
 
-    public EdicionIngieren(String usuario) 
+    public EdicionIngieren(String usuario)
     {
         this.usuario = usuario;
 
@@ -55,20 +55,20 @@ public class EdicionIngieren implements WindowListener, ActionListener
         ventanaEdicion.setLayout(new GridLayout(4, 2));
         ventanaEdicion.setSize(370, 200);
         ventanaEdicion.setResizable(false);
+        ventanaEdicion.setLocationRelativeTo(null);
+        ventanaEdicion.setBackground(Color.PINK);
 
-        // Labels
         ventanaEdicion.add(lblPaciente);
         ventanaEdicion.add(chPaciente);
         ventanaEdicion.add(lblTratamiento);
         ventanaEdicion.add(chTratamiento);
         ventanaEdicion.add(lblCantidad);
         ventanaEdicion.add(txtCantidad);
+        ventanaEdicion.add(new Label());
         ventanaEdicion.add(btnModificar);
 
         btnModificar.addActionListener(this);
         ventanaEdicion.addWindowListener(this);
-        ventanaEdicion.setLocationRelativeTo(null);
-        ventanaEdicion.setBackground(Color.PINK);
 
         feedback.setLayout(new FlowLayout());
         feedback.setSize(300, 100);
@@ -76,35 +76,32 @@ public class EdicionIngieren implements WindowListener, ActionListener
         feedback.add(mensaje);
         feedback.addWindowListener(this);
         feedback.setLocationRelativeTo(null);
-        feedback.setBackground(Color.LIGHT_GRAY);
+        feedback.setBackground(Color.PINK);
 
         ventana.setVisible(true);
     }
 
-    public void windowClosing(WindowEvent windowEvent) 
+    public void windowClosing(WindowEvent windowEvent)
     {
-        if (windowEvent.getSource().equals(feedback)) 
+        if (windowEvent.getSource().equals(feedback))
         {
             feedback.setVisible(false);
-        } 
-        else if (windowEvent.getSource().equals(ventanaEdicion)) 
+        }
+        else if (windowEvent.getSource().equals(ventanaEdicion))
         {
             ventanaEdicion.setVisible(false);
-        } 
-        else 
+        }
+        else
         {
-            try 
+            try
             {
                 if (statement != null)
                 {
                     statement.close();
-                }
-                if (connection != null)
-                {
                     connection.close();
                 }
-            } 
-            catch (SQLException e) 
+            }
+            catch (SQLException e)
             {
                 System.out.println("Error al cerrar " + e.toString());
             }
@@ -112,48 +109,51 @@ public class EdicionIngieren implements WindowListener, ActionListener
         }
     }
 
-    public void actionPerformed(ActionEvent actionEvent) 
+    public void actionPerformed(ActionEvent actionEvent)
     {
-        if (actionEvent.getSource().equals(btnEditar)) 
+        if (actionEvent.getSource().equals(btnEditar))
         {
             idIngieren = choRegistro.getSelectedItem().split(" - ")[0];
-            connection = modelo.conectar();
 
-            // Llenar Choices
+            connection = modelo.conectar();
             modelo.rellenarChoicePacientes(connection, chPaciente);
             modelo.rellenarChoiceTratamientos(connection, chTratamiento);
-
-            // Llenar campos
             modelo.editarCamposIngieren(connection, usuario, idIngieren, chPaciente, chTratamiento, txtCantidad);
-
             modelo.desconectar(connection);
+
             ventanaEdicion.setVisible(true);
-        } 
-        else if (actionEvent.getSource().equals(btnModificar)) 
+        }
+        else if (actionEvent.getSource().equals(btnModificar))
         {
-            if (!txtCantidad.getText().isBlank()) 
+            if (txtCantidad.getText().isBlank())
             {
+                mensaje.setText("Todos los campos deben estar completos.");
+                feedback.setVisible(true);
+            }
+            else
+            {
+                String idPacienteFK = chPaciente.getSelectedItem().split(" - ")[0];
+                String idTratamientoFK = chTratamiento.getSelectedItem().split(" - ")[0];
+
+                sentencia = "UPDATE ingieren SET idPacienteFK = '" + idPacienteFK +
+                            "', idTratamientoFK = '" + idTratamientoFK +
+                            "', cantidad = '" + txtCantidad.getText() +
+                            "' WHERE idIngiere = " + idIngieren + ";";
+
                 connection = modelo.conectar();
-                boolean exito = modelo.modificarIngieren(connection, usuario, idIngieren, txtCantidad.getText(), idIngieren, idIngieren, idIngieren, idIngieren);
+                modelo.modificarIngieren(connection, usuario, sentencia);
                 modelo.desconectar(connection);
-                if (exito) {
-                    mensaje.setText("Modificación Correcta");
-                } else {
-                    mensaje.setText("Error en la modificación");
-                }
+
+                mensaje.setText("Modificación correcta");
                 feedback.setVisible(true);
                 rellenarChoice();
                 ventanaEdicion.setVisible(false);
-            } 
-            else 
-            {
-                mensaje.setText("No puede haber ningún campo en blanco");
-                feedback.setVisible(true);
             }
         }
     }
 
-    public void rellenarChoice() {
+    public void rellenarChoice()
+    {
         connection = modelo.conectar();
         modelo.rellenarChoiceIngieren1(connection, choRegistro);
         modelo.desconectar(connection);

@@ -376,7 +376,7 @@ public class Modelo
 		}
 		catch (SQLException sqlex)
 		{
-			 sqlex.printStackTrace(); 
+			sqlex.printStackTrace(); 
 			resultado = false;
 		}
 		return resultado;
@@ -557,9 +557,9 @@ public class Modelo
 	{
 		String contenidoTextarea = "Código - Paciente - Tratamiento - Cantidad - Médico\n";
 		sentencia = "SELECT i.idIngiere, p.nombrePaciente, t.tipoTratamiento, i.recetaIngiere, p.medicoPaciente " +
-	            "FROM ingieren i " +
-	            "JOIN pacientes p ON i.idPacienteFK = p.idPaciente " +
-	            "JOIN tratamientos t ON i.idTratamientoFK = t.idTratamiento;";
+				"FROM ingieren i " +
+				"JOIN pacientes p ON i.idPacienteFK = p.idPaciente " +
+				"JOIN tratamientos t ON i.idTratamientoFK = t.idTratamiento;";
 		try
 		{
 			statement = conexion.createStatement();
@@ -567,15 +567,15 @@ public class Modelo
 			while (rs.next())
 			{
 				contenidoTextarea += rs.getInt("idIngiere")
-					    + " - "
-					    + rs.getString("nombrePaciente")
-					    + " - "
-					    + rs.getString("tipoTratamiento")
-					    + " - "
-					    + rs.getString("recetaIngiere")
-					    + " - "
-					    + rs.getString("medicoPaciente") 
-					    + "\n";
+						+ " - "
+						+ rs.getString("nombrePaciente")
+						+ " - "
+						+ rs.getString("tipoTratamiento")
+						+ " - "
+						+ rs.getString("recetaIngiere")
+						+ " - "
+						+ rs.getString("medicoPaciente") 
+						+ "\n";
 			}
 		}
 		catch (SQLException sqlex)
@@ -700,27 +700,20 @@ public class Modelo
 		}
 	}
 
-	public boolean modificarIngieren(Connection connection, String usuario, String idIngiere,
-			String pacienteSeleccionado, String tratamientoSeleccionado,
-			String recetaIngiere, String medicoIngiere, String idIngieren) {
-		guardarLog(usuario, "Modificación de registro de ingesta id: " + idIngiere);
+	public boolean modificarIngieren(Connection connection, String usuario, String sentencia)
+	{
+		guardarLog(usuario, "Modificación de registro de ingesta");
 
-		String sql = "UPDATE ingieren SET idPacienteFK = ?, idTratamientoFK = ?, recetaIngiere = ?, medicoIngiere = ? WHERE idIngiere = ?";
+		System.out.println(sentencia);
 		boolean resultado = false;
-		try (PreparedStatement ps = connection.prepareStatement(sql)) {
-			int idPacienteFK = Integer.parseInt(pacienteSeleccionado.split(" - ")[0]);
-			int idTratamientoFK = Integer.parseInt(tratamientoSeleccionado.split(" - ")[0]);
-
-			ps.setInt(1, idPacienteFK);
-			ps.setInt(2, idTratamientoFK);
-			ps.setString(3, recetaIngiere);
-			ps.setString(4, medicoIngiere);
-			ps.setInt(6, Integer.parseInt(idIngiere));
-
-			int filasAfectadas = ps.executeUpdate();
-			resultado = filasAfectadas > 0;
-		} catch (SQLException e) {
-			System.out.println("Error en modificarIngieren: " + e.getMessage());
+		try
+		{
+			statement = connection.createStatement();
+			statement.executeUpdate(sentencia);
+			resultado = true;
+		}
+		catch (SQLException sqlex)
+		{
 			resultado = false;
 		}
 		return resultado;
@@ -728,209 +721,215 @@ public class Modelo
 
 	public void editarCamposIngieren(Connection connection, String usuario, String idIngieren,
 			Choice chPaciente, Choice chTratamiento, TextField txtCantidad)
+	{
+		try
 		{
-			String sql = "SELECT i.idPacienteFK, i.idTratamientoFK, i.cantidad FROM ingieren i WHERE i.idIngiere = ?";
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setInt(1, Integer.parseInt(idIngieren));
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						int idPacienteFK = rs.getInt("idPacienteFK");
-						int idTratamientoFK = rs.getInt("idTratamientoFK");
+			statement = connection.createStatement();
+			sentencia = "SELECT * FROM ingieren WHERE idIngiere = " + idIngieren;
+			rs = statement.executeQuery(sentencia);
+			if (rs.next())
+			{
+				int idPacienteFK = rs.getInt("idPacienteFK");
+				int idTratamientoFK = rs.getInt("idTratamientoFK");
 
-						for (int i = 0; i < chPaciente.getItemCount(); i++) {
-							if (chPaciente.getItem(i).startsWith(idPacienteFK + " -")) {
-								chPaciente.select(i);
-								break;
-							}
-						}
-
-						for (int i = 0; i < chTratamiento.getItemCount(); i++) {
-							if (chTratamiento.getItem(i).startsWith(idTratamientoFK + " -")) {
-								chTratamiento.select(i);
-								break;
-							}
-						}
-
-						txtCantidad.setText(rs.getString("cantidad"));
+				// Seleccionar paciente
+				for (int i = 0; i < chPaciente.getItemCount(); i++)
+				{
+					if (chPaciente.getItem(i).startsWith(idPacienteFK + " -"))
+					{
+						chPaciente.select(i);
 					}
 				}
-			} catch (SQLException e) {
-				System.out.println("Error en editarCamposIngieren: " + e.getMessage());
-			}
-		}
 
-	public void rellenarChoiceIngieren1(Connection connection, Choice ch) {
-		ch.removeAll();
-		ch.add("Seleccionar un registro...");
-		Statement statement = null;
-		ResultSet rs = null;
-		try {
-			statement = connection.createStatement();
-			String sentencia = "SELECT idIngiere, recetaIngiere FROM ingieren";
-			rs = statement.executeQuery(sentencia);
-			while (rs.next()) {
-				String registro = rs.getInt("idIngiere") + " - " + rs.getString("recetaIngiere");
-				ch.add(registro);
-			}
-		} catch (SQLException sqlex) {
-			System.out.println("Error al cargar registros de ingesta: " + sqlex.getMessage());
-		} finally {
-			try { if (rs != null) rs.close(); } catch (SQLException e) {}
-			try { if (statement != null) statement.close(); } catch (SQLException e) {}
-		}
-	}
-
-
-	public void ImprimirClinicas(String dest, String datos, String usuario)
-	{
-		guardarLog(usuario, "Exportación de datos de clínicas");
-
-		try
-		{
-			PdfWriter writer = new PdfWriter(dest);
-			PdfDocument pdf = new PdfDocument(writer);
-			Document document = new Document(pdf, PageSize.A4.rotate());
-			document.setMargins(20, 20, 20, 20);
-			PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
-			PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
-
-
-			Table table = new Table(UnitValue.createPercentArray(new float[] { 15, 40, 20, 25 })) 
-					.useAllAvailableWidth();
-
-			String[] lineas = datos.split("\n");
-			for (int i = 0; i < lineas.length; i++) {
-				String linea = lineas[i].trim();
-				if (!linea.isEmpty()) {
-					process(table, linea, (i == 0 ? bold : font), (i == 0));
+				// Seleccionar tratamiento
+				for (int i = 0; i < chTratamiento.getItemCount(); i++)
+				{
+					if (chTratamiento.getItem(i).startsWith(idTratamientoFK + " -"))
+					{
+						chTratamiento.select(i);
+					}
 				}
+
+				txtCantidad.setText(rs.getString("cantidad"));
 			}
-			document.add(table);
-			document.close();
-			Desktop.getDesktop().open(new File(dest));
 		}
-		catch (IOException ioe) {
-			System.err.println("Error al imprimir clínicas a PDF: " + ioe.getMessage());
-			ioe.printStackTrace();
+		catch (SQLException sqlex)
+		{
+			System.out.println("Error al cargar datos de ingesta: " + sqlex.getMessage());
 		}
 	}
-
-	public void ImprimirTratamientos(String dest, String datos, String usuario)
-	{
-		guardarLog(usuario, "Exportación de datos de tratamientos");
-
-		try
-		{
-			PdfWriter writer = new PdfWriter(dest);
-			PdfDocument pdf = new PdfDocument(writer);
-			Document document = new Document(pdf, PageSize.A4.rotate());
-			document.setMargins(20, 20, 20, 20);
-			PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
-			PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
-
-
-			Table table = new Table(UnitValue.createPercentArray(new float[] { 15, 25, 30, 30 })) 
-					.useAllAvailableWidth();
-
-			String[] lineas = datos.split("\n");
-			for (int i = 0; i < lineas.length; i++) {
-				String linea = lineas[i].trim();
-				if (!linea.isEmpty()) {
-
-					process(table, linea, (i == 0 ? bold : font), (i == 0));
+		public void rellenarChoiceIngieren1(Connection connection, Choice ch) {
+			ch.removeAll();
+			ch.add("Seleccionar un registro...");
+			Statement statement = null;
+			ResultSet rs = null;
+			try {
+				statement = connection.createStatement();
+				String sentencia = "SELECT idIngiere, recetaIngiere FROM ingieren";
+				rs = statement.executeQuery(sentencia);
+				while (rs.next()) {
+					String registro = rs.getInt("idIngiere") + " - " + rs.getString("recetaIngiere");
+					ch.add(registro);
 				}
+			} catch (SQLException sqlex) {
+				System.out.println("Error al cargar registros de ingesta: " + sqlex.getMessage());
+			} finally {
+				try { if (rs != null) rs.close(); } catch (SQLException e) {}
+				try { if (statement != null) statement.close(); } catch (SQLException e) {}
 			}
-			document.add(table);
-			document.close();
-			Desktop.getDesktop().open(new File(dest));
 		}
-		catch (IOException ioe) {
-			System.err.println("Error al imprimir tratamientos a PDF: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-	}
 
-	public void ImprimirPacientes(String dest, String datos, String usuario)
-	{
-		guardarLog(usuario, "Exportación de datos de pacientes");
 
-		try
+		public void ImprimirClinicas(String dest, String datos, String usuario)
 		{
-			PdfWriter writer = new PdfWriter(dest);
-			PdfDocument pdf = new PdfDocument(writer);
-			Document document = new Document(pdf, PageSize.A4.rotate());
-			document.setMargins(20, 20, 20, 20);
-			PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
-			PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+			guardarLog(usuario, "Exportación de datos de clínicas");
 
-			Table table = new Table(UnitValue.createPercentArray(new float[] { 25, 10, 25, 30, 10 }))
-					.useAllAvailableWidth();
+			try
+			{
+				PdfWriter writer = new PdfWriter(dest);
+				PdfDocument pdf = new PdfDocument(writer);
+				Document document = new Document(pdf, PageSize.A4.rotate());
+				document.setMargins(20, 20, 20, 20);
+				PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+				PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-			String[] lineas = datos.split("\n");
-			for (int i = 0; i < lineas.length; i++) {
-				String linea = lineas[i].trim();
 
-				if (!linea.isEmpty()) {
-					process(table, linea, (i == 0 ? bold : font), (i == 0));
+				Table table = new Table(UnitValue.createPercentArray(new float[] { 15, 40, 20, 25 })) 
+						.useAllAvailableWidth();
+
+				String[] lineas = datos.split("\n");
+				for (int i = 0; i < lineas.length; i++) {
+					String linea = lineas[i].trim();
+					if (!linea.isEmpty()) {
+						process(table, linea, (i == 0 ? bold : font), (i == 0));
+					}
 				}
+				document.add(table);
+				document.close();
+				Desktop.getDesktop().open(new File(dest));
 			}
-			document.add(table);
-			document.close();
-			Desktop.getDesktop().open(new File(dest));
-		} catch (IOException ioe){
-			System.err.println("Error al imprimir pacientes a PDF: " + ioe.getMessage());
-			ioe.printStackTrace();
+			catch (IOException ioe) {
+				System.err.println("Error al imprimir clínicas a PDF: " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
 		}
-	}
 
-	public void ImprimirIngieren(String dest, String datos, String usuario)
-	{
-		guardarLog(usuario, "Exportación de datos de registros de ingesta");
-
-		try
+		public void ImprimirTratamientos(String dest, String datos, String usuario)
 		{
-			PdfWriter writer = new PdfWriter(dest);
-			PdfDocument pdf = new PdfDocument(writer);
-			Document document = new Document(pdf, PageSize.A4.rotate());
-			document.setMargins(20, 20, 20, 20);
-			PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
-			PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+			guardarLog(usuario, "Exportación de datos de tratamientos");
+
+			try
+			{
+				PdfWriter writer = new PdfWriter(dest);
+				PdfDocument pdf = new PdfDocument(writer);
+				Document document = new Document(pdf, PageSize.A4.rotate());
+				document.setMargins(20, 20, 20, 20);
+				PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+				PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
 
-			Table table = new Table(UnitValue.createPercentArray(new float[] { 10, 25, 25, 20, 20 })) 
-					.useAllAvailableWidth();
+				Table table = new Table(UnitValue.createPercentArray(new float[] { 15, 25, 30, 30 })) 
+						.useAllAvailableWidth();
 
-			String[] lineas = datos.split("\n");
-			for (int i = 0; i < lineas.length; i++) {
-				String linea = lineas[i].trim();
-				if (!linea.isEmpty()) {
+				String[] lineas = datos.split("\n");
+				for (int i = 0; i < lineas.length; i++) {
+					String linea = lineas[i].trim();
+					if (!linea.isEmpty()) {
 
-					process(table, linea, (i == 0 ? bold : font), (i == 0));
+						process(table, linea, (i == 0 ? bold : font), (i == 0));
+					}
 				}
+				document.add(table);
+				document.close();
+				Desktop.getDesktop().open(new File(dest));
 			}
-			document.add(table);
-			document.close();
-			Desktop.getDesktop().open(new File(dest));
+			catch (IOException ioe) {
+				System.err.println("Error al imprimir tratamientos a PDF: " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
 		}
-		catch (IOException ioe) {
-			System.err.println("Error al imprimir registros de ingesta a PDF: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-	}
 
-	public static void ayuda()
-	{
-		try
+		public void ImprimirPacientes(String dest, String datos, String usuario)
 		{
-			ProcessBuilder pb = new ProcessBuilder("hh.exe","ayuda.chm");
-			pb.start();
-			System.out.println("Abriendo el archivo CHM...");
-		}
-		catch (IOException e)
-		{
-			System.err.println("Error al intentar abrir el archivo CHM: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+			guardarLog(usuario, "Exportación de datos de pacientes");
 
-}
+			try
+			{
+				PdfWriter writer = new PdfWriter(dest);
+				PdfDocument pdf = new PdfDocument(writer);
+				Document document = new Document(pdf, PageSize.A4.rotate());
+				document.setMargins(20, 20, 20, 20);
+				PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+				PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+				Table table = new Table(UnitValue.createPercentArray(new float[] { 25, 10, 25, 30, 10 }))
+						.useAllAvailableWidth();
+
+				String[] lineas = datos.split("\n");
+				for (int i = 0; i < lineas.length; i++) {
+					String linea = lineas[i].trim();
+
+					if (!linea.isEmpty()) {
+						process(table, linea, (i == 0 ? bold : font), (i == 0));
+					}
+				}
+				document.add(table);
+				document.close();
+				Desktop.getDesktop().open(new File(dest));
+			} catch (IOException ioe){
+				System.err.println("Error al imprimir pacientes a PDF: " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+		}
+
+		public void ImprimirIngieren(String dest, String datos, String usuario)
+		{
+			guardarLog(usuario, "Exportación de datos de registros de ingesta");
+
+			try
+			{
+				PdfWriter writer = new PdfWriter(dest);
+				PdfDocument pdf = new PdfDocument(writer);
+				Document document = new Document(pdf, PageSize.A4.rotate());
+				document.setMargins(20, 20, 20, 20);
+				PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+				PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+
+				Table table = new Table(UnitValue.createPercentArray(new float[] { 10, 25, 25, 20, 20 })) 
+						.useAllAvailableWidth();
+
+				String[] lineas = datos.split("\n");
+				for (int i = 0; i < lineas.length; i++) {
+					String linea = lineas[i].trim();
+					if (!linea.isEmpty()) {
+
+						process(table, linea, (i == 0 ? bold : font), (i == 0));
+					}
+				}
+				document.add(table);
+				document.close();
+				Desktop.getDesktop().open(new File(dest));
+			}
+			catch (IOException ioe) {
+				System.err.println("Error al imprimir registros de ingesta a PDF: " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+		}
+
+		public static void ayuda()
+		{
+			try
+			{
+				ProcessBuilder pb = new ProcessBuilder("hh.exe","ayuda.chm");
+				pb.start();
+				System.out.println("Abriendo el archivo CHM...");
+			}
+			catch (IOException e)
+			{
+				System.err.println("Error al intentar abrir el archivo CHM: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+	}
