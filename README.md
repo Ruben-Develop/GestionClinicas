@@ -27,7 +27,7 @@ El proyecto se ha desarrollado en **Java** utilizando el entorno de desarrollo *
 ---
 
 ## 📊 Estadísticas del repositorio
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Ruben-Develop&layout=compact&theme=tokyonight&hide_border=true&token=TU_TOKEN)
+![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Ruben-Develop&layout=compact&theme=default)
 
 ---
 
