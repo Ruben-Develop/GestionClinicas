@@ -27,5 +27,13 @@ El proyecto se ha desarrollado en **Java** utilizando el entorno de desarrollo *
 ---
 
 ## 📊 Estadísticas del repositorio
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Ruben-Develop&layout=compact&theme=tokyonight&hide_border=true)
+![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Ruben-Develop)
 
+---
+
+## 👤 Autor
+
+Rubén Curiel Hernández
+
+[LinkedIn](https://www.linkedin.com/in/rubencurielhernandez/)  
+[GitHub](https://github.com/Ruben-Develop)
